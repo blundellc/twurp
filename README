@@ -1,0 +1,22 @@
+twurp -- dump twitter statuses into a database.
+
+what it does:
+    snarfs twitter statuses and dumps them in a database.
+
+    first time twurp is run on a new screen name, twurp will attempt to get all
+    previous statuses, and save them into a database.  upon subsequent
+    executions, twurp will try to get all statuses since the last in the
+    database.
+
+usage:
+	twurp.py [<screen name> [<number of most recent statuses to show>]]
+
+by default you will find the sqlite database in:
+
+    ~/.local/share/twurp/twurp.sqlite
+
+requires sqlalchemy and the python twitter package.
+
+under Debian:
+    # apt-get install python-twitter python-sqlalchemy
+
