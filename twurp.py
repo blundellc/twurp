@@ -20,7 +20,7 @@ def main():
 
     print 'twurp:',who
     for tweet in Tweet.latest(sess, who, last):
-        print tweet.when, tweet.text
+        print tweet.when, tweet.text.encode('utf8')
         print
 
 
@@ -39,15 +39,17 @@ def open_session(verbose=False):
 
 class Tweet(Base):
     __tablename__ = 'tweets'
-    id = sql.Column(sql.Integer, primary_key=True)
-    who = sql.Column(sql.String, nullable=False)
+    #__table_args__ = (sql.UniqueConstraint('who','tweet_id'),{})
+    #id = sql.Column(sql.Integer, primary_key=True)
+    tweet_id = sql.Column(sql.Integer, primary_key=True)
+    who = sql.Column(sql.String, primary_key=True)
     when = sql.Column(sql.DateTime, nullable=False)
     text = sql.Column(sql.String, nullable=False)
     json = sql.Column(sql.String, nullable=False)
 
     def __init__(self, status):
-        self.id = status.id
-        self.who = status.user.name
+        self.tweet_id = status.id
+        self.who = status.user.screen_name
         self.when = datetime.datetime.strptime(status.created_at, '%a %b %d %H:%M:%S +0000 %Y')
         self.text = status.text
         self.json = status.AsJsonString()
@@ -58,7 +60,7 @@ class Tweet(Base):
 
     @classmethod
     def latest(cls, sess, who, limit=1):
-        q = sess.query(cls).filter(cls.who == who).order_by(cls.id.desc())
+        q = sess.query(cls).filter(cls.who == who).order_by(cls.tweet_id.desc())
         if limit == 1:
             return q.first()
         return q.limit(limit)
@@ -73,15 +75,16 @@ class Tweet(Base):
             # add this guy afresh
             timeline['count'] = twurp.statuses_count
         elif num_db == twurp.statuses_count:
-            return
+            return 0
         else:
             # find the last tweet
             last = cls.latest(sess, who)
-            timeline['since_id'] = last.id
+            timeline['since_id'] = last.tweet_id
 
         for tweet in map(cls, twit.GetUserTimeline(who,**timeline)):
             sess.add(tweet)
-        sess.commit()
+            sess.commit()
+
         new_db = cls.count(sess, who) - num_db
         return new_db
 
