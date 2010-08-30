@@ -8,7 +8,7 @@ import sys
 
 def main():
     sess = open_session()
-    who = '50cent'
+    who = 'stephenfry'
     last = 10
     if len(sys.argv) > 1:
         who = sys.argv[1]
@@ -39,8 +39,6 @@ def open_session(verbose=False):
 
 class Tweet(Base):
     __tablename__ = 'tweets'
-    #__table_args__ = (sql.UniqueConstraint('who','tweet_id'),{})
-    #id = sql.Column(sql.Integer, primary_key=True)
     tweet_id = sql.Column(sql.Integer, primary_key=True)
     who = sql.Column(sql.String, primary_key=True)
     when = sql.Column(sql.DateTime, nullable=False)
@@ -100,7 +98,6 @@ def xdg_dir(path, kind=XDG_DATA):
     prefixed with the XDG path of the corresponding kind.
     makes all directories necessary to make the full path valid.
     """
-    # XDG base data dir
     xdg_dir = os.getenv(kind['env'], kind['default'])
     prefix = os.path.expanduser(os.path.join(xdg_dir, *path[:-1]))
     try:
