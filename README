@@ -1,12 +1,10 @@
-twurp -- dump twitter statuses into a database.
+twurp -- snarf twitter statuses into a database.
 
 what it does:
-    snarfs twitter statuses and dumps them in a database.
 
-    first time twurp is run on a new screen name, twurp will attempt to get all
-    previous statuses, and save them into a database.  upon subsequent
-    executions, twurp will try to get all statuses since the last in the
-    database.
+    the first time twurp is run on a new screen name, twurp will attempt to get
+    all previous statuses and save them into a database.  subsequently, twurp
+    will try to get all statuses since the last in the database.
 
 usage:
 	twurp.py [<screen name> [<number of most recent statuses to show>]]
